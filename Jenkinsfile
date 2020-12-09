@@ -1,3 +1,5 @@
+@Library('tools@master') _
+
 pipeline {
     agent any
     stages {
