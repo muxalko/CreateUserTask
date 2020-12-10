@@ -26,7 +26,7 @@ pipeline {
                     extraVars: [
                         login: 'user',
                         secret_key: [value: 'password', hidden: true],
-                        filepath: env.filename
+                        filepath: env.filename,
                         user_to_add: env.user_to_add
                     ])
             }
