@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+  
+  tasks:
+  - debug: msg="{{ lookup('env','BUILD_TAG') }}"
+
+  - name: check file exists.
+    stat:
+      path: "{{ filepath }}"
+    register: file_details
+
+  - debug:
+      msg: "The file or directory exists {{ file_details }}"
+    when: file_details.stat.exists

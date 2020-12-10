@@ -14,5 +14,15 @@ pipeline {
                 }
             }        
         }
+        stage("Setup") {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'setup.yml',
+                    extraVars: [
+                        login: 'user',
+                        secret_key: [value: 'password', hidden: true]
+                    ])
+            }
+        }
     }
 }
