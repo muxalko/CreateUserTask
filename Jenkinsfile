@@ -7,11 +7,11 @@ pipeline {
             steps {
                 script {
                     def inputFile = uploadFile.inputGetFile('public.key')
-                    //validKey = sh(script: 'ssh-keygen -l -f public.key', returnStdout: true)
+                    validKey = sh(script: 'ssh-keygen -l -f public.key', returnStdout: true)
                 }
-                sh "ls -ltrah"
-                sh "ssh-keygen -l -f public.key"
-                //sh "echo ${validKey.contains('RSA')}"
+                sh """
+                echo "Valid key provided: " + ${validKey.contains('RSA')}
+                """
             }        
         }
         stage("Setup") {
