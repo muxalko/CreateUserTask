@@ -1,16 +1,19 @@
 @Library('tools@main') _
 
+env.filename = 'public.key'
+
 pipeline {
     agent any
     stages {
         stage("Upload_Public_Key") {
             steps {
                 script {
-                    def inputFile = uploadFile.inputGetFile('public.key')
-                    validKey = sh(script: 'ssh-keygen -l -f public.key', returnStdout: true)
+                    
+                    def inputFile = uploadFile.inputGetFile(env.filename)
+                    validKey = sh(script: 'ssh-keygen -l -f ' + env.filename, returnStdout: true)
                 }
                 sh """
-                echo "Valid key provided: " + ${validKey.contains('RSA')}
+                echo "Valid key provided: " ${validKey.contains('RSA')}
                 """
             }        
         }
@@ -20,7 +23,8 @@ pipeline {
                     playbook: 'setup.yml',
                     extraVars: [
                         login: 'user',
-                        secret_key: [value: 'password', hidden: true]
+                        secret_key: [value: 'password', hidden: true],
+                        filepath: env.filename
                     ])
             }
         }

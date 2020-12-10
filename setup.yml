@@ -6,7 +6,7 @@
 
   - name: check file exists.
     stat:
-      path: "{{ public.key }}"
+      path: "{{ filepath }}"
     register: file_details
 
   - debug:
