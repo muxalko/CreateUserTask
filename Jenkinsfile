@@ -10,7 +10,7 @@ pipeline {
                     def validKey = sh ( script: 'ssh-keygen -l -f public.key', returnStdout: true ) 
                     sh "ls -ltrah"
                     sh "echo ${validKey}"
-                    sh "echo ${validKey.contains('valid')}"
+                    sh "echo ${validKey.contains('RSA')}"
                 }
             }        
         }
