@@ -1,6 +1,8 @@
 @Library('tools@main') _
 
 env.filename = 'public.key'
+env.user_to_add = 'bob'
+
 
 pipeline {
     agent any
@@ -25,6 +27,7 @@ pipeline {
                         login: 'user',
                         secret_key: [value: 'password', hidden: true],
                         filepath: env.filename
+                        user_to_add: env.user_to_add
                     ])
             }
         }
