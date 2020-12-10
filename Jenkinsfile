@@ -7,7 +7,9 @@ pipeline {
             steps {
                 script {
                     def inputFile = uploadFile.inputGetFile('public.key')
-                    sh "ls -ltR"
+                    def validKey = sh script: 'ssh-keygen -l -f public.key', returnStdout: true
+                    sh "ls -ltrah"
+                    sh "echo ${validKey}"
                 }
             }        
         }
