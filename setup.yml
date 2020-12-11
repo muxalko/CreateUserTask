@@ -1,5 +1,5 @@
 - hosts: localhost
-  
+  become: true
   tasks:
   - debug: msg="{{ lookup('env','BUILD_TAG') }}"
 
@@ -8,9 +8,7 @@
       name: "{{ user_to_add }}"
       state: present
       comment: User {{ user_to_add }} Created by Jenkins/Ansible
-      become: true
-      become_user: "{{ login }}"
-
+      
   - name: Check file exists.
     stat:
       path: "{{ filepath }}"

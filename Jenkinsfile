@@ -1,20 +1,16 @@
 @Library('tools@main') _
 
-parameters {
-        string(name: 'user_to_add', defaultValue: 'bob', description: 'user to create')
-        string(name: 'filename', defaultValue: 'bob', description: 'user to create')
-        string(name: 'root_username', defaultValue: 'user', description: 'Jenkins privilege user')
-        password(name: 'root_password', defaultValue: 'password', description: 'Jenkins privilege password')
-    }
-
+env.public_key_filepath = 'public.key'
+env.user_to_add = 'bob'
+ 
 pipeline {
     agent any
     stages {
         stage("Upload_Public_Key") {
             steps {
                 script {
-                    def inputFile = uploadFile.inputGetFile(params.filename)
-                    validKey = sh(script: 'ssh-keygen -l -f ' + params.filename, returnStdout: true)
+                    def inputFile = uploadFile.inputGetFile(env.public_key_filepath)
+                    validKey = sh(script: 'ssh-keygen -l -f ' + env.public_key_filepath, returnStdout: true)
                 }
                 sh """
                 echo "Valid key provided: " ${validKey.contains('RSA')}
@@ -25,19 +21,21 @@ pipeline {
             steps {
                 ansiblePlaybook(
                     playbook: 'setup.yml',
+                    //become: true,
+                    //becomeUser: '{{ root_username }}',
+                    colorized: true,
+                    //disableHostKeyChecking: true,
+                    //vaultCredentialsId: 'AnsibleVault',
                     extraVars: [
-                        login: params.root_username,
-                        secret_key: [value: params.root_password, hidden: true],
-                        filepath: params.filename,
-                        user_to_add: params.user_to_add
+                        //login: 'user',
+                        //secret_key: [value: 'password', hidden: true],
+                        public_key_filepath: env.public_key_filepath,
+                        user_to_add: env.user_to_add,
+                        //ansible_become: [value: 'yes', hidden: true],
+                        //ansible_become_method=sudo,
+                        //ansible_user='{{ root_username }}',
+                        //ansible_become_pass='{{ root_password }}'
                     ])
-            }
-        }
-        stage ("Test Ansible from shell") {
-            steps {
-                sh """
-                ansible-playbook
-                """
             }
         }
     }
