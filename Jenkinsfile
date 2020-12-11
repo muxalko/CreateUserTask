@@ -2,7 +2,7 @@
 
 env.public_key_filepath = 'public.key'
 env.user_to_add = 'bob'
- 
+
 pipeline {
     agent any
     stages {
@@ -15,7 +15,7 @@ pipeline {
                 sh """
                 echo "Valid key provided: " ${validKey.contains('RSA')}
                 """
-            }        
+            }
         }
         stage("Setup") {
             steps {
@@ -25,7 +25,7 @@ pipeline {
                     //becomeUser: '{{ root_username }}',
                     colorized: true,
                     //disableHostKeyChecking: true,
-                    vaultCredentialsId: 'AnsibleVault',
+                    vaultCredentialsId: 'VaultPasswdFile',
                     extraVars: [
                         '@passwd.yml',
                         public_key_filepath: env.public_key_filepath,
