@@ -3,12 +3,15 @@
   tasks:
   - debug: msg="{{ lookup('env','BUILD_TAG') }}"
 
-  - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+  - name: Add user
     user:
       name: "{{ user_to_add }}"
+      state: present
       comment: User {{ user_to_add }} Created by Jenkins/Ansible
+      become: true
+      become_user: "{{ login }}"
 
-  - name: check file exists.
+  - name: Check file exists.
     stat:
       path: "{{ filepath }}"
     register: file_details

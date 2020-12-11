@@ -1,8 +1,11 @@
 @Library('tools@main') _
 
-env.filename = 'public.key'
-env.user_to_add = 'bob'
-
+parameters {
+        string(name: 'user_to_add', defaultValue: 'bob', description: 'user to create')
+        string(name: 'filename', defaultValue: 'bob', description: 'user to create')
+        string(name: 'root_username', defaultValue: 'user', description: 'Jenkins privilege user')
+        password(name: 'root_password', defaultValue: 'password', description: 'Jenkins privilege password')
+    }
 
 pipeline {
     agent any
@@ -11,8 +14,8 @@ pipeline {
             steps {
                 script {
                     
-                    def inputFile = uploadFile.inputGetFile(env.filename)
-                    validKey = sh(script: 'ssh-keygen -l -f ' + env.filename, returnStdout: true)
+                    def inputFile = uploadFile.inputGetFile(params.filename)
+                    validKey = sh(script: 'ssh-keygen -l -f ' + params.filename, returnStdout: true)
                 }
                 sh """
                 echo "Valid key provided: " ${validKey.contains('RSA')}
@@ -24,11 +27,18 @@ pipeline {
                 ansiblePlaybook(
                     playbook: 'setup.yml',
                     extraVars: [
-                        login: 'user',
-                        secret_key: [value: 'password', hidden: true],
-                        filepath: env.filename,
-                        user_to_add: env.user_to_add
+                        login: params.root_username,
+                        secret_key: [value: params.root_password, hidden: true],
+                        filepath: params.filename,
+                        user_to_add: params.user_to_add
                     ])
+            }
+        }
+        stage ("Test Ansible from shell") {
+            steps {
+                sh """
+                ansible-playbook
+                """
             }
         }
     }
