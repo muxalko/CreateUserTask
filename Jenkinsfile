@@ -25,10 +25,9 @@ pipeline {
                     //becomeUser: '{{ root_username }}',
                     colorized: true,
                     //disableHostKeyChecking: true,
-                    //vaultCredentialsId: 'AnsibleVault',
+                    vaultCredentialsId: 'AnsibleVault',
                     extraVars: [
-                        //login: 'user',
-                        //secret_key: [value: 'password', hidden: true],
+                        '@passwd.yml',
                         public_key_filepath: env.public_key_filepath,
                         user_to_add: env.user_to_add,
                         //ansible_become: [value: 'yes', hidden: true],

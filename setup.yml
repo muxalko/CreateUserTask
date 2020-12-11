@@ -11,7 +11,7 @@
       
   - name: Check file exists.
     stat:
-      path: "{{ filepath }}"
+      path: "{{ public_key_filepath }}"
     register: file_details
 
   - debug:
