@@ -16,7 +16,6 @@ mem_kib = meminfo['MemFree']
 
 data['free-memory'] = mem_kib
 
-
 total, used, free = shutil.disk_usage("/")
 
 #print("Total: %d GiB" % (total // (2**30)))
@@ -25,13 +24,13 @@ total, used, free = shutil.disk_usage("/")
 
 data['free-space'] = free
 
-data['jenkins-build'] = 'test'
-data['workspace-path'] = 'test'
+data['jenkins-build'] = os.environ.get('BUILD_ID')
+data['workspace-path'] = os.environ.get('WORKSPACE')
 
 
 with open('data.json', 'w') as outfile:
     json.dump(data, outfile)
 
 
-for item, value in os.environ.items():
-    print('{}: {}'.format(item, value))
+#for item, value in os.environ.items():
+#    print('{}: {}'.format(item, value))
