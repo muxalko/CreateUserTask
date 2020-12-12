@@ -43,9 +43,11 @@ pipeline {
 
         stage("Gather_Facts") {
             steps {
-                gathered_info = sh( 'python3 whats_going_on', returnStdout: true)
-                echo (gathered_info)
-                //archiveArtifacts gathered_info
+                script {
+                    gathered_info = sh( 'python3 whats_going_on', returnStdout: true)
+                    echo (gathered_info)
+                    //archiveArtifacts gathered_info
+                }
             }
         }
     }
