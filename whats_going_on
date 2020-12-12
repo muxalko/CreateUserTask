@@ -1,44 +1,37 @@
 import os
-import platform
+import distro
 import json
+import shutil
+from datetime import datetime
 
 data = {}
-data['people'] = []
-data['people'].append({
-    'name': 'Scott',
-    'website': 'stackabuse.com',
-    'from': 'Nebraska'
-})
-data['people'].append({
-    'name': 'Larry',
-    'website': 'google.com',
-    'from': 'Michigan'
-})
-data['people'].append({
-    'name': 'Tim',
-    'website': 'apple.com',
-    'from': 'Alabama'
-})
+data['os-distribution'] = str(distro.linux_distribution(full_distribution_name=False)[0])
+data['os-version'] = str(distro.linux_distribution(full_distribution_name=False)[1])
+
+now = datetime.now()
+data['date'] = now.strftime("%d/%m/%Y %H:%M:%S")
+
+meminfo = dict((i.split()[0].rstrip(':'),int(i.split()[1])) for i in open('/proc/meminfo').readlines())
+mem_kib = meminfo['MemFree']
+
+data['free-memory'] = mem_kib
+
+
+total, used, free = shutil.disk_usage("/")
+
+#print("Total: %d GiB" % (total // (2**30)))
+#print("Used: %d GiB" % (used // (2**30)))
+#print("Free: %d GiB" % (free // (2**30)))
+
+data['free-space'] = free
+
+data['jenkins-build'] = 'test'
+data['workspace-path'] = 'test'
+
 
 with open('data.json', 'w') as outfile:
     json.dump(data, outfile)
 
-# Architecture
-print("Architecture: " + platform.architecture()[0])
-
-# machine
-print("Machine: " + platform.machine())
-
-# node
-print("Node: " + platform.node())
-
-# system
-print("System: " + platform.system())
-
-# distribution
-dist = platform.dist()
-dist = " ".join(x for x in dist)
-print("Distribution: " + dist)
 
 for item, value in os.environ.items():
     print('{}: {}'.format(item, value))
