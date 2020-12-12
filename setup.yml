@@ -26,7 +26,6 @@
   - name: Add public key to authorized_hosts
     authorized_key:
       user: "{{ user_to_add }}"
-      group: true
       state: present
       key: "{{ lookup('file', '{{ public_key_filepath }}') }}"
     when: file_details.stat.exists
