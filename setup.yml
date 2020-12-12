@@ -1,14 +1,15 @@
 - hosts: localhost
   gather_facts: false
+
   # privilege user read from encrypted file
   vars_files: passwd.yml
-  become: true
-  become_user: "{{ root_username }}"
   vars: 
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_user: "{{ root_username }}"
     ansible_become_pass: "{{ root_password }}" # from passwd.yam vault
 
   tasks:
-  #- include_vars: passwd.yml
 
   - name: Create group
     group:
