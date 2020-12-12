@@ -14,8 +14,7 @@ pipeline {
                                             name: 'username'),
                             ])
 
-                    def inputFile = input 
-                          message: 'Upload file', 
+                    def inputFile = input message: 'Upload file', 
                           parameters: [file(name: 'public.key', description: 'Upload only public.key file')]        
                     
                     def fileContent = readFile "${inputFile}"
