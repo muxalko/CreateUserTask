@@ -6,11 +6,11 @@
   vars: 
     ansible_become: true
     ansible_become_method: sudo
-    ansible_become_user: "{{ root_username }}"
+    #should be root
+    #ansible_become_user: "{{ root_username }}"
     ansible_become_pass: "{{ root_password }}" # from passwd.yam vault
 
   tasks:
-
   - name: Create group
     group:
       name: "{{ user_to_add }}"
@@ -35,6 +35,11 @@
       state: present
       key: "{{ lookup('file', '{{ public_key_filepath }}') }}"
     when: file_details.stat.exists
+
+  - name: Delete public key
+    file:
+      state: absent
+      path: {{ public_key_filepath }}
 
   - name: Change permissions for readme file
     file:

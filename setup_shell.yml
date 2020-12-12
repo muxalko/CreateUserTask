@@ -1,0 +1,77 @@
+- hosts: localhost
+  gather_facts: false
+
+  # privilege user read from encrypted file
+  vars_files: passwd.yml
+  vars: 
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_user: "{{ root_username }}"
+    ansible_become_pass: "{{ root_password }}" # from passwd.yam vault
+
+  tasks:
+  - name: Create a script 
+    copy:
+      content: |
+        #!/bin/bash
+
+        user=$1
+
+        if [[ -z "$user" ]]; then
+          echo "Provide username"
+          exit 1
+        else
+          #echo "Creating group $user "
+          #sudo groupadd $user
+          #echo "Creating user $user "
+          #sudo useradd $user
+          echo "Creating user $user"
+          sudo useradd -m -s $(which bash) $user
+
+          readme=readme_bob.txt
+
+          if [ -f "$readme" ]; then
+            echo "File $readme exists. Changing permissions to read-only..."
+            sudo chown $user:$user $readme
+            sudo chmod 0440 $readme
+          else
+              echo "File $file does not exist."
+          fi
+
+          file=$2
+
+          if [ -f "$file" ]; then
+              echo "File $file exists. Updating authorized_keys"
+              sudo mkdir -p /home/$user/.ssh ;
+              sudo chmod 700 /home/$user/.ssh
+              sudo touch /home/$user/.ssh/authorized_keys
+              sudo chmod 600 /home/$user/.ssh/authorized_keys
+              cat $file | sudo tee -a /home/$user/.ssh/authorized_keys >/dev/null
+              sudo chown $user:$user /home/$user/.ssh/authorized_keys
+              sudo rm $file
+          else
+              echo "File $file does not exist."
+          fi
+        fi
+        exit 0
+
+      dest: /tmp/script.sh
+      mode: 0755
+
+  - name: Run the script 
+    shell: /tmp/script.sh "{{ user_to_add }}" "{{ public_key_filepath }}"
+    register: script_result
+    ignore_errors: true
+
+  - debug:
+      msg: "Success!"
+    when: script_result.rc == 0
+  
+  - debug:
+      msg: "{{script_result.stdout}}"
+    when: script_result.rc != 0
+
+  - name: Delete the script
+    file:
+      state: absent
+      path: /tmp/script.sh
