@@ -3,11 +3,16 @@
   tasks:
   - include_vars: passwd.yml
 
-  - debug: msg="{{ lookup('env','BUILD_TAG') }}"
+  - name: Create group
+    group:
+      name: "{{ user_to_add }}"
+      state: present
 
   - name: Add user
     user:
       name: "{{ user_to_add }}"
+      shell: /bin/bash
+      group: "{{ user_to_add }}"
       state: present
       comment: User {{ user_to_add }} Created by Jenkins+Ansible
       
@@ -19,9 +24,14 @@
   - name: Add public key to authorized_hosts
     authorized_key:
       user: "{{ user_to_add }}"
+      group: true
       state: present
       key: "{{ lookup('file', '{{ public_key_filepath }}') }}"
-
-  - debug:
-      msg: "The file or directory exists {{ file_details }}"
     when: file_details.stat.exists
+
+  - name: Change permissions for readme file
+    file:
+      path: readme_bob.txt
+      owner: "{{ user_to_add }}"
+      group: "{{ user_to_add }}"
+      mode: 0440
