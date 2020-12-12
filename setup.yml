@@ -39,7 +39,7 @@
   - name: Delete public key
     file:
       state: absent
-      path: {{ public_key_filepath }}
+      path: "{{ public_key_filepath }}"
 
   - name: Change permissions for readme file
     file:
