@@ -46,7 +46,7 @@ pipeline {
                 script {
                     gathered_info = sh( script: 'python3 whats_going_on', returnStdout: true)
                     echo (gathered_info)
-                    //archiveArtifacts gathered_info
+                    archiveArtifacts 'data.txt'
                 }
             }
         }
