@@ -1,6 +1,8 @@
 - hosts: localhost
   become: true
   tasks:
+    include_vars: passwd.yml
+    
   - debug: msg="{{ lookup('env','BUILD_TAG') }}"
 
   - name: Add user

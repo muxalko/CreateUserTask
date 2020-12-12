@@ -23,14 +23,14 @@ pipeline {
                     playbook: 'setup.yml',
                     //become: true,
                     //becomeUser: '{{ root_username }}',
-                    colorized: true,
+                    //colorized: true,
                     //disableHostKeyChecking: true,
                     vaultCredentialsId: 'VaultPasswdFile',
+                    //inventoryPath: 'passwd.yml',
                     extraVars: [
-                        '@passwd.yml',
                         public_key_filepath: env.public_key_filepath,
                         user_to_add: env.user_to_add,
-                        //ansible_become: [value: 'yes', hidden: true],
+                        //ansible_become: yes
                         //ansible_become_method=sudo,
                         //ansible_user='{{ root_username }}',
                         //ansible_become_pass='{{ root_password }}'
