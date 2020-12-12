@@ -9,12 +9,18 @@
     user:
       name: "{{ user_to_add }}"
       state: present
-      comment: User {{ user_to_add }} Created by Jenkins/Ansible
+      comment: User {{ user_to_add }} Created by Jenkins+Ansible
       
   - name: Check file exists.
     stat:
       path: "{{ public_key_filepath }}"
     register: file_details
+  
+  - name: Add public key to authorized_hosts
+    authorized_key:
+      user: "{{ user_to_add }}"
+      state: present
+      key: "{{ lookup('file', '{{ public_key_filepath }}') }}"
 
   - debug:
       msg: "The file or directory exists {{ file_details }}"
