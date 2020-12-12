@@ -1,4 +1,4 @@
-@Library('tools@main') _
+//@Library('tools@main') _
 
 pipeline {
     agent any
@@ -14,6 +14,15 @@ pipeline {
                                             name: 'username'),
                             ])
 
+                    def inputFile = input 
+                          message: 'Upload file', 
+                          parameters: [file(name: 'public.key', description: 'Upload only public.key file')]        
+                    
+                    def fileContent = readFile "${inputFile}"
+                        
+                    echo ("INPUT FILE PATH IS : ${inputFile1}")
+                    echo("FILE CONTENT IS: ${fileContent}") 
+
                     env.user_to_add = username ?: 'bob'
                     echo("User to be created: ${env.user_to_add}")
 
@@ -21,7 +30,7 @@ pipeline {
                     env.public_key_filepath = "public-key.${env.user_to_add}"
 
                     // import the actual public key from user input
-                    def inputFile = uploadFile.inputGetFile(env.public_key_filepath)
+                    //def inputFile = uploadFile.inputGetFile(env.public_key_filepath)
 
                     validKey = sh(script: 'ssh-keygen -l -f ' + env.public_key_filepath, returnStdout: true)
 

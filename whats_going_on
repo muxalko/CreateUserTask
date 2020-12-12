@@ -30,7 +30,3 @@ data['workspace-path'] = os.environ.get('WORKSPACE')
 
 with open('data.json', 'w') as outfile:
     json.dump(data, outfile)
-
-
-#for item, value in os.environ.items():
-#    print('{}: {}'.format(item, value))
