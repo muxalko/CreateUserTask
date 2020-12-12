@@ -19,7 +19,7 @@ pipeline {
                     
                     def fileContent = readFile "${inputFile}"
                         
-                    echo ("INPUT FILE PATH IS : ${inputFile1}")
+                    echo ("INPUT FILE PATH IS : ${inputFile}")
                     echo("FILE CONTENT IS: ${fileContent}") 
 
                     env.user_to_add = username ?: 'bob'
