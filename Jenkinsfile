@@ -14,20 +14,14 @@ pipeline {
                                             name: 'username'),
                             ])
 
-                    def inputFile = input message: 'Upload file', 
-                          parameters: [file(name: 'public.key', description: 'Upload only public.key file')]        
-                    
-                    def fileContent = readFile "${inputFile}"
-                        
-                    echo ("INPUT FILE PATH IS : ${inputFile}")
-                    echo("FILE CONTENT IS: ${fileContent}") 
-
                     env.user_to_add = username ?: 'bob'
                     echo("User to be created: ${env.user_to_add}")
 
                     // name for saving public key
                     env.public_key_filepath = "public-key.${env.user_to_add}"
 
+                    def inputFile = input message: 'Upload file', 
+                          parameters: [file(name: env.public_key_filepath, description: 'Upload only public.key file')]            
                     // import the actual public key from user input
                     //def inputFile = uploadFile.inputGetFile(env.public_key_filepath)
 
