@@ -23,7 +23,7 @@ pipeline {
                                                 ),
                                             choice( description:'How to run the setup ?', 
                                                     name:'ansible_using', 
-                                                    choices: ['shell module','ansible plugin'].join('\n'),
+                                                    choices: ['shell module','ansible modules'].join('\n'),
                                                     )
                                     ],
                         )
@@ -47,9 +47,9 @@ pipeline {
                 }
             }
         }
-        stage('Setup using Ansible Plugin') {
+        stage('Setup using Ansible Modules') {
             when {
-                expression { env.validKey && env.ansibleMethod == 'ansible plugin' }
+                expression { env.validKey && env.ansibleMethod == 'ansible modules' }
             }
             steps {
                 ansiblePlaybook(
@@ -62,7 +62,7 @@ pipeline {
             }
         }
 
-        stage('Setup using Shell Module') {
+        stage('Setup using Ansible Shell Module') {
             when {
                 expression { env.validKey && env.ansibleMethod == 'shell module' }
             }
