@@ -13,7 +13,7 @@ pipeline {
                     
                     timeout(time:5, unit:'MINUTES') {
                         userInput = input(
-                                    id: 'userInput', message: 'Username to create',
+                                    id: 'userInput', message: 'New User Details',
                                     parameters: [
                                             string(defaultValue: 'bob',
                                                     description: 'This user will be created.',
