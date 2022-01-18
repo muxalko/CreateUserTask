@@ -1,0 +1,57 @@
+The mission:
+- Create user “bob” on Jenkins master
+- Add ssh-public-key into Bob’s authorized_keys file
+- Make sure only bob can read the file "readme_bob.txt"
+- Collect data from the server and save it as Jenkins job artifact
+Create GitHub repository with the following files (you can add more if needed):
+- text file: readme_bob.txt
+- script: whats_going_on
+- ansible playbook: setup.yml
+- jenkins file: Jenkinsfile
+- Readme: Readme.md
+
+Files explanation:
+Jenkinsfile:
+Create a Jenkins pipeline job which performs the following:
+Job input:
+• file upload - the user should be able to upload ssh-public-key file (this file should be
+added into Bob’s authorized_keys using the ansible playbook
+
+Job flow:
+• stage 1: Preparations
+- Verify the user input file – make sure the file is a valid ssh-public-key.
+(display informative error in case the input file is in correct)
+- clone your GitHub repository.
+• Stage 2: Execute the ansible playbook.
+• Stage 3: execute " whats_going_on " script
+• Save the output of the script " whats_going_on " as job artifact.
+
+Text file:
+- create a text file named "readme_bob.txt" with the text "For your eyes only"
+Script:
+Create bash or python script named "whats_going_on",
+the script will check the following and save the data into a json file format:
+- OS distribution and version
+- date
+- Free memory
+- Free space on "/"
+- Jenkins build number
+- workspace path
+Ansible playbook:
+Create ansible playbook which performs the following tasks:
+- Create user "bob" (password: abcd1234)
+- Add the ssh-public-key (Jenkins pipeline input file) into bob's authorized_keys.
+
+- Allow only user “bob” to read-only the readme_bob.txt file
+
+Environment details:
+- Jenkins is running on ubuntu server.
+root_username: user
+root_password: password
+- ansible 2.9 is installed on the Jenkins server
+- SSH is installed on the server.
+- python 3 available on the server
+
+Notes:
+- if additional plugins or packages are required in order to execute the job or scripts they should
+be documented in the readme file.
